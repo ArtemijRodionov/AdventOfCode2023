@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use std::{env::args, fs, str::Lines};
 
 fn parse(it: &mut Lines) -> Vec<(u32, u32, u32)> {
@@ -50,7 +51,7 @@ fn solve(data: &str, parse_seed: fn(&str) -> Vec<u32>) -> u32 {
     ];
 
     seeds
-        .iter()
+        .par_iter()
         .map(|&seed| {
             let mut param_value = seed;
             for param in &params {
