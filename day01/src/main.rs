@@ -1,4 +1,4 @@
-use std::env;
+use std::env::args;
 use std::fs;
 use std::usize;
 
@@ -47,12 +47,17 @@ fn solve2(data: &str) -> usize {
         .sum()
 }
 
-fn main() {
-    let path = env::args().nth(1).expect("Path argument is missing");
-    let data = fs::read_to_string(path).expect("File is missing");
+pub fn main() {
+    let given = args()
+        .nth(1)
+        .and_then(|path| fs::read_to_string(path).ok())
+        .unwrap_or("".to_string());
 
-    println!("1: {}", solve1(&data));
-    println!("2: {}", solve2(&data));
+    let builtin = include_str!("../data.txt");
+    let data = if given.is_empty() { builtin } else { &given };
+
+    dbg!(solve1(data));
+    dbg!(solve2(data));
 }
 
 #[cfg(test)]

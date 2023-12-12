@@ -138,9 +138,14 @@ fn solve<T: GameRule>(data: &str) -> u32 {
         .sum()
 }
 
-fn main() {
-    let path = args().nth(1).expect("path");
-    let data = fs::read_to_string(path).expect("data");
+pub fn main() {
+    let given = args()
+        .nth(1)
+        .and_then(|path| fs::read_to_string(path).ok())
+        .unwrap_or("".to_string());
+
+    let builtin = include_str!("../data.txt");
+    let data = if given.is_empty() { builtin } else { &given };
 
     let result1 = solve::<Game1>(&data);
     dbg!(result1);

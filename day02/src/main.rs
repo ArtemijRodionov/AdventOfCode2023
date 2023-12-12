@@ -131,11 +131,15 @@ impl Game {
     }
 }
 
-fn main() {
-    let path = args()
+pub fn main() {
+    let given = args()
         .nth(1)
-        .expect("Provide path to puzzle data as the 1th argument");
-    let data = fs::read_to_string(path).expect("Can't read puzzle data");
+        .and_then(|path| fs::read_to_string(path).ok())
+        .unwrap_or("".to_string());
+
+    let builtin = include_str!("../data.txt");
+    let data = if given.is_empty() { builtin } else { &given };
+
     let game = Game::from_str(&data).expect("Can't parse puzzle");
     let result1: u32 = game.solve1();
     dbg!(result1);

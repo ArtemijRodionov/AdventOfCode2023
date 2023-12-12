@@ -76,9 +76,14 @@ fn solve(data: &str, parse_seed: fn(&str) -> Vec<u32>) -> u32 {
         .expect("min")
 }
 
-fn main() {
-    let path = args().nth(1).expect("path");
-    let data = fs::read_to_string(path).expect("data");
+pub fn main() {
+    let given = args()
+        .nth(1)
+        .and_then(|path| fs::read_to_string(path).ok())
+        .unwrap_or("".to_string());
+
+    let builtin = include_str!("../data.txt");
+    let data = if given.is_empty() { builtin } else { &given };
 
     let result1 = solve(&data, parse_seed1);
     dbg!(result1);
