@@ -1,6 +1,6 @@
 use std::{collections::HashMap, env::args, fs};
 
-type Node = u32;
+type Node = u16;
 
 fn parse_node(node: &[u8]) -> Node {
     let range = b'A'..=b'Z';
@@ -28,9 +28,9 @@ fn parse_map<'a>(data: impl Iterator<Item = &'a [u8]>) -> HashMap<Node, (Node, N
     })
 }
 
-const START: u32 = 0;
-const END: u32 = (b'Z' - b'A') as u32;
-const END_NODE: u32 = END | END << 5 | END << 10;
+const START: Node = 0;
+const END: Node = (b'Z' - b'A') as Node;
+const END_NODE: Node = END | END << 5 | END << 10;
 
 fn solve1(data: &[u8]) -> u32 {
     let mut it = data.split(|&v| v == b'\n').filter(|v| v.len() != 0);
@@ -67,13 +67,12 @@ fn solve2(data: &[u8]) -> u64 {
     let insts = parse_inst(it.next().expect("inst"));
     let map = parse_map(it);
 
-    let first = 0b11111 as u32;
+    let first = 0b11111 as Node;
     let mut nodes = map
         .keys()
         .filter(|&&v| (v & first) == START)
         .map(|&v| v)
-        .collect::<Vec<u32>>();
-
+        .collect::<Vec<Node>>();
     nodes
         .iter_mut()
         .map(|node| {
