@@ -1,14 +1,15 @@
-use std::{env::args, fs};
+use std::{cmp::Ordering, env::args, fs};
 
 fn calc_wins(time_to_go: u64, best_distance: u64) -> u32 {
-    let mut wins = 0;
-    for accelerate in 0..time_to_go {
-        if accelerate * (time_to_go - accelerate) > best_distance {
-            wins += 1;
-        }
-    }
+    let d = ((time_to_go.pow(2) - 4 * best_distance) as f64).sqrt();
+    let x1 = (time_to_go as f64 - d) / 2.0;
+    let x2 = (time_to_go as f64 + d) / 2.0;
+    let (min, max) = match x1.partial_cmp(&x2) {
+        Some(Ordering::Less) => (x1.ceil(), x2.floor()),
+        _ => (x2.ceil(), x1.floor()),
+    };
 
-    wins
+    (max - min) as u32 + 1
 }
 
 fn parse<'a>(line: &'a str) -> impl Iterator<Item = u32> + 'a {
