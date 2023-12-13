@@ -1,6 +1,10 @@
-use std::{collections::HashMap, env::args, fs};
+use std::{env::args, fs};
 
 type Node = u16;
+const START: Node = 0;
+const END: Node = (b'Z' - b'A') as Node;
+const END_NODE: Node = END | END << 5 | END << 10;
+const EMPTY_NODE: Node = Node::MAX;
 
 fn parse_node(node: &[u8]) -> Node {
     let range = b'A'..=b'Z';
@@ -16,21 +20,17 @@ fn parse_inst<'a>(data: &'a [u8]) -> Vec<bool> {
     data.iter().map(|&x| b'L' == x).collect()
 }
 
-fn parse_map<'a>(data: impl Iterator<Item = &'a [u8]>) -> HashMap<Node, (Node, Node)> {
-    data.fold(HashMap::new(), |mut map, l| {
+fn parse_map<'a>(data: impl Iterator<Item = &'a [u8]>) -> [(Node, Node); Node::MAX as usize] {
+    let mut map = [(EMPTY_NODE, EMPTY_NODE); u16::MAX as usize];
+    for l in data {
         let mut eq_it = l.split(|&b| b == b'=');
         let (from, to) = (eq_it.next().expect("from"), eq_it.next().expect("to"));
         let mut to_it = to.split(|&b| b == b',');
         let (to_l, to_r) = (to_it.next().expect("l"), to_it.next().expect("r"));
-        map.insert(parse_node(from), (parse_node(to_l), parse_node(to_r)));
-
-        map
-    })
+        map[parse_node(from) as usize] = (parse_node(to_l), parse_node(to_r));
+    }
+    map
 }
-
-const START: Node = 0;
-const END: Node = (b'Z' - b'A') as Node;
-const END_NODE: Node = END | END << 5 | END << 10;
 
 fn solve1(data: &[u8]) -> u32 {
     let mut it = data.split(|&v| v == b'\n').filter(|v| v.len() != 0);
@@ -39,7 +39,11 @@ fn solve1(data: &[u8]) -> u32 {
 
     let mut node = START;
     for (i, inst) in insts.iter().cycle().enumerate() {
-        node = if *inst { map[&node].0 } else { map[&node].1 };
+        node = if *inst {
+            map[node as usize].0
+        } else {
+            map[node as usize].1
+        };
 
         if node == END_NODE {
             return (i + 1) as u32;
@@ -68,24 +72,23 @@ fn solve2(data: &[u8]) -> u64 {
     let map = parse_map(it);
 
     let first = 0b11111 as Node;
-    let mut nodes = map
-        .keys()
-        .filter(|&&v| (v & first) == START)
-        .map(|&v| v)
-        .collect::<Vec<Node>>();
-    nodes
-        .iter_mut()
-        .map(|node| {
-            (insts
-                .iter()
-                .cycle()
-                .map(|inst| {
-                    *node = if *inst { map[node].0 } else { map[node].1 };
-                    (*node & first) == END
-                })
-                .position(|idx| idx)
-                .unwrap()
-                + 1) as u64
+
+    map.iter()
+        .enumerate()
+        .filter(|&v| (v.0 as Node & first) == START && *v.1 != (EMPTY_NODE, EMPTY_NODE))
+        .map(|v| {
+            let mut node = v.0 as Node;
+            for (i, &inst) in insts.iter().cycle().enumerate() {
+                node = if inst {
+                    map[node as usize].0
+                } else {
+                    map[node as usize].1
+                };
+                if (node & first) == END {
+                    return (i + 1) as u64;
+                }
+            }
+            unreachable!()
         })
         .fold(1u64, lcm)
 }
