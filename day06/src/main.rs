@@ -5,11 +5,11 @@ fn calc_wins(time_to_go: u64, best_distance: u64) -> u32 {
     let x1 = (time_to_go as f64 - d) / 2.0;
     let x2 = (time_to_go as f64 + d) / 2.0;
     let (min, max) = match x1.partial_cmp(&x2) {
-        Some(Ordering::Less) => (x1.ceil(), x2.floor()),
-        _ => (x2.ceil(), x1.floor()),
+        Some(Ordering::Less) => (x1, x2),
+        _ => (x2, x1),
     };
 
-    (max - min) as u32 + 1
+    (max.floor() - min.ceil()) as u32 + 1
 }
 
 fn parse<'a>(line: &'a str) -> impl Iterator<Item = u32> + 'a {
