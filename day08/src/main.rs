@@ -96,14 +96,18 @@ pub fn main() {
         .and_then(|path| fs::read_to_string(path).ok())
         .unwrap_or("".to_string());
 
-    let builtin = include_str!("../data.txt");
-    let data = if given.is_empty() { builtin } else { &given };
+    let builtin = include_bytes!("../data.txt");
+    let data = if given.is_empty() {
+        builtin
+    } else {
+        given.as_bytes()
+    };
 
-    let result1 = solve1(data.as_bytes());
+    let result1 = solve1(data);
     dbg!(result1);
 
     // 11373818 is low
     // 12331588 is incorrect
-    let result2 = solve2(data.as_bytes());
+    let result2 = solve2(data);
     dbg!(result2);
 }
