@@ -10,6 +10,7 @@ fn puzzles() -> &'static [(fn(), &'static str)] {
         (day06::main, "6"),
         (day07::main, "7"),
         (day08::main, "8"),
+        (day09::main, "9"),
     ]
 }
 
@@ -21,7 +22,7 @@ pub fn main() {
         f();
         let elapsed = now.elapsed();
         total += elapsed;
-        println!("{} took {:.3}ms", name, elapsed.as_secs_f64() * 1000.0)
+        println!("{} took {:.3}ms\n", name, elapsed.as_secs_f64() * 1000.0)
     }
     println!("Total {:.3}ms", total.as_secs_f64() * 1000.0)
 }
