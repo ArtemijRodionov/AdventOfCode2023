@@ -11,6 +11,7 @@ fn puzzles() -> &'static [(fn(), &'static str)] {
         (day07::main, "7"),
         (day08::main, "8"),
         (day09::main, "9"),
+        (day10::main, "10"),
     ]
 }
 
