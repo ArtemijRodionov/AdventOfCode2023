@@ -3,6 +3,7 @@ use std::{
     env::args,
     fs,
 };
+use utils::dbg;
 
 fn count_wins(line: &str) -> u32 {
     let (wins, nums) = line.split_once('|').expect("|");

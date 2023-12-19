@@ -1,4 +1,5 @@
 use std::{env::args, fs};
+use utils::dbg;
 
 struct Cards([char; 13]);
 const CARDS1_VALUES: Cards = Cards([

@@ -1,4 +1,5 @@
 use std::{cmp::Ordering, env::args, fs};
+use utils::dbg;
 
 fn calc_wins(time_to_go: u64, best_distance: u64) -> u32 {
     let d = ((time_to_go.pow(2) - 4 * best_distance) as f64).sqrt();

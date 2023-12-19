@@ -1,4 +1,5 @@
 use std::{env::args, fs};
+use utils::dbg;
 
 fn parse_line(line: &[u8]) -> Vec<i64> {
     line.split(|c| *c == b' ')

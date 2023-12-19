@@ -1,4 +1,5 @@
 use std::{collections::HashSet, env::args, fs};
+use utils::dbg;
 
 #[derive(Default, Clone, Copy, Debug)]
 struct Direction {

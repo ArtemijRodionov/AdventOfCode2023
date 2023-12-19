@@ -1,4 +1,5 @@
 use std::{env::args, fs, vec};
+use utils::dbg;
 
 fn solve(offset_value: usize, data: &[u8]) -> u64 {
     let is_new_line: fn(&u8) -> bool = |x| *x == b'\n';
@@ -19,8 +20,7 @@ fn solve(offset_value: usize, data: &[u8]) -> u64 {
         }
     }
 
-    let mut galaxies = Vec::new();
-    // let mut galaxies = Vec::with_capacity(galaxies_count);
+    let mut galaxies = Vec::with_capacity(galaxies_count);
     let mut y_offset = 0;
     for (y, row) in data.split(is_new_line).enumerate() {
         if y_expand[y] {

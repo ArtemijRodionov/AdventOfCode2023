@@ -1,4 +1,5 @@
 use std::{collections::HashSet, env::args, fs, u8, usize};
+use utils::dbg;
 
 fn is_symbol(c: u8) -> bool {
     !c.is_ascii_digit() && c != b'.'

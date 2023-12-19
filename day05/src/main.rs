@@ -1,5 +1,6 @@
 use rayon::prelude::*;
 use std::{env::args, fs, str::Lines};
+use utils::dbg;
 
 fn parse(it: &mut Lines) -> Vec<(u32, u32, u32)> {
     let mut parsed: Vec<(u32, u32, u32)> = it

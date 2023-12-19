@@ -1,6 +1,7 @@
 use std::env::args;
 use std::fs;
 use std::usize;
+use utils::dbg;
 
 fn solve1(data: &str) -> u32 {
     data.lines()
